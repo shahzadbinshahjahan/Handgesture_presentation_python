@@ -16,23 +16,29 @@ class HandDetector():
     
     def findHands(self,img,draw=True):
         imgRGB=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-        results=self.hands.process(imgRGB)
+        self.results=self.hands.process(imgRGB)
         #print(results.multi_hand_landmarks)
-        if results.multi_hand_landmarks:
-            for handLms in results.multi_hand_landmarks:
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
                 if draw:
                     self.mpDraw.draw_landmarks(img,handLms,self.mpHands.HAND_CONNECTIONS)
         return img
 
-#for id,lm in enumerate(handLms.landmark):
-                    # id stores the points of the landmarks
-                    #print(id,lm)
-                    #converting the decimal values of x and y
-                    #h,w,c=img.shape
-                    #cx,cy=int(lm.x*w),int(lm.y*h) #center point of each id
-                    #print(id,cx,cy) #prints all the values of 20 ids
-                    #if id==4:
-                    #   cv2.circle(img,(cx,cy),5,(255,0,255),cv2.FILLED)
+    def findPosition(self,img,handNo=0,draw=True):
+        lmlist=[]
+        if self.results.multi_hand_landmarks:
+            myHand=self.results.multi_hand_landmarks[handNo]
+            for id,lm in enumerate(myHand.landmark):
+                #d stores the points of the landmarks
+                #print(id,lm)
+                #converting the decimal values of x and y
+                h,w,c=img.shape
+                cx,cy=int(lm.x*w),int(lm.y*h) #center point of each id
+                #print(id,cx,cy) #prints all the values of 20 ids
+                lmlist.append([id,cx,cy])
+                if draw:
+                   cv2.circle(img,(cx,cy),12,(255,0,255),cv2.FILLED)
+        return lmlist
 
     
 def main():
@@ -42,7 +48,11 @@ def main():
     detector=HandDetector()
     while True:
         success,img=cap.read()
-        img=detector.findHands(img)
+        img=detector.findHands(img) #draw=False will remove the mediapipe module drawing
+        lmlist=detector.findPosition(img)
+        if len(lmlist)!=0:
+            print(lmlist[0])
+        
         cTime=time.time()
         fps=1/(cTime-pTime)
         pTime=cTime
