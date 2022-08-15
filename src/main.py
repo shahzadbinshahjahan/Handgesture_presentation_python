@@ -11,7 +11,10 @@ heightsmall,widthsmall=int(height/5),int(width/5) #dimensions of webcam on prese
 gestureThreshold=300
 buttonPress=False
 buttoncounter=0
-buttondelay=20
+buttondelay=15 #fps
+annotations=[[]] #stores at points to draw at
+annotationnumber=-1
+annotationstart=False
 
 #camera setup
 cap=cv2.VideoCapture(0)
@@ -26,7 +29,6 @@ pathImages=sorted(os.listdir(folderPath)) #sorting according to numbers and leng
 #hand detector
 detector=HandDetector(detectionCon=0.8,maxHands=1)
 
-imgNo=0
 while True:
     success,img=cap.read()
     img=cv2.flip(img,1)
@@ -60,6 +62,9 @@ while True:
                 if slideNumber>0:
                     buttonPress=True
                     slideNumber-=1
+                    annotations=[[]] #stores at points to draw at
+                    annotationnumber=-1
+                    annotationstart=False
             
             #Gesture -2 Go right
             if fingers == [0,0,0,0,1]: #little finger
@@ -68,10 +73,24 @@ while True:
                 if slideNumber < len(pathImages)-1:
                     buttonPress=True
                     slideNumber+=1
+                    annotations=[[]] #stores at points to draw at
+                    annotationnumber=-1
+                    annotationstart=False
             
         #Gesture -3 Show pointer
         if fingers == [0,1,1,0,0]: #index finger
             cv2.circle(currentSlide,indexFinger,8,(0,0,255),cv2.FILLED)
+
+        #Gesture -4 Draw
+        if fingers == [0,1,0,0,0]:
+            if annotationstart == False:
+                annotationstart = True
+                annotationnumber+=1
+                annotations.append([])
+            cv2.circle(currentSlide,indexFinger,8,(0,0,255),cv2.FILLED)
+            annotations[annotationnumber].append(indexFinger)
+        else: 
+            annotationstart=False
     
     #Button pressed iterations
     if buttonPress:
@@ -79,7 +98,13 @@ while True:
         if buttoncounter>buttondelay:
             buttoncounter=0
             buttonPress=False
- 
+    
+    #draw at the points stored in annotations
+    for i in range(len(annotations)):
+        for j in range(len(annotations[i])):
+            if j!=0:
+                cv2.line(currentSlide,annotations[i][j-1],annotations[i][j],(0,0,200),12)
+    
     #overlay of webcam on presentation
     imgSmall=cv2.resize(img,(widthsmall,heightsmall))
     currentSlide[0:heightsmall,widthCurrent-widthsmall:widthCurrent]=imgSmall
