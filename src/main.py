@@ -1,13 +1,14 @@
 import cv2
 import os
+import numpy as np
 from handtrackingmodule import HandDetector
 
 #variables
-width,height=int(1366/2),int(768/2) #dimensions of webcam
+width,height=int(1366),int(768) #dimensions of webcam
 folderPath="../Resources/test"
 slideNumber=0
-heightsmall,widthsmall=int(height/3),int(width/3) #dimensions of webcam on presentation
-gestureThreshold=200
+heightsmall,widthsmall=int(height/5),int(width/5) #dimensions of webcam on presentation
+gestureThreshold=300
 buttonPress=False
 buttoncounter=0
 buttondelay=20
@@ -32,6 +33,7 @@ while True:
     #import images
     pathFullImage=os.path.join(folderPath,pathImages[slideNumber])
     currentSlide=cv2.imread(pathFullImage)
+    heigthCurrent,widthCurrent,_Current=currentSlide.shape
 
 
     hands,img=detector.findHands(img) #flipType=false will show the correctls hands, i.e left as left
@@ -43,7 +45,13 @@ while True:
         fingers=detector.fingersUp(hand)
         cx,cy=hand['center']
         #print(fingers )
+        lmList=hand['lmList']
+
+        #constrain values for easier drawing
         
+        xVal=int(np.interp(lmList[8][0],[width//2,widthCurrent],[0,width]))
+        yVal=int(np.interp(lmList[8][1],[150,height-150],[0,height]))
+        indexFinger=xVal,yVal
         if cy<=gestureThreshold: #if hand is at the height of the face
             #Gesture-1 Go left
             if fingers == [1,0,0,0,0]: #thumb
@@ -60,6 +68,10 @@ while True:
                 if slideNumber < len(pathImages)-1:
                     buttonPress=True
                     slideNumber+=1
+            
+        #Gesture -3 Show pointer
+        if fingers == [0,1,1,0,0]: #index finger
+            cv2.circle(currentSlide,indexFinger,8,(0,0,255),cv2.FILLED)
     
     #Button pressed iterations
     if buttonPress:
@@ -67,11 +79,9 @@ while True:
         if buttoncounter>buttondelay:
             buttoncounter=0
             buttonPress=False
-
-
+ 
     #overlay of webcam on presentation
     imgSmall=cv2.resize(img,(widthsmall,heightsmall))
-    heigthCurrent,widthCurrent,_Current=currentSlide.shape
     currentSlide[0:heightsmall,widthCurrent-widthsmall:widthCurrent]=imgSmall
     
     cv2.imshow("Web Cam",img)
@@ -79,4 +89,3 @@ while True:
     key=cv2.waitKey(1)
     if key==ord('q'):
         break
-
