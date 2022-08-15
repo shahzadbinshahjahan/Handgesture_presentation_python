@@ -17,7 +17,7 @@ annotationnumber=-1
 annotationstart=False
 
 #camera setup
-cap=cv2.VideoCapture(0)
+cap=cv2.VideoCapture(0) # 0 for webcam, 4 for phone cam
 cap.set(3,width)
 cap.set(4,height)
 

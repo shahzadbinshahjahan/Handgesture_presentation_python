@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import math
+import time
 
 
 class HandDetector:
@@ -152,6 +153,8 @@ class HandDetector:
 def main():
     cap = cv2.VideoCapture(0)
     detector = HandDetector(detectionCon=0.8, maxHands=2)
+    pTime=0
+    cTime=0
     while True:
         # Get image frame
         success, img = cap.read()
@@ -182,6 +185,10 @@ def main():
                 # Find Distance between two Landmarks. Could be same hand or different hands
                 length, info, img = detector.findDistance(lmList1[8][0:2], lmList2[8][0:2], img)  # with draw
                 # length, info = detector.findDistance(lmList1[8], lmList2[8])  # with draw
+        cTime = time.time()
+        fps=1/(cTime-pTime)
+        pTime=cTime
+        cv2.putText(img,str(int(fps)),(10,70),cv2.FONT_HERSHEY_PLAIN,3,(255,0,255),3)
         # Display
         cv2.imshow("Image", img)
         cv2.waitKey(1)
