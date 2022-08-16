@@ -87,7 +87,7 @@ while True:
                 annotationstart = True
                 annotationnumber+=1
                 annotations.append([])
-            cv2.circle(currentSlide,indexFinger,8,(0,0,255),cv2.FILLED)
+            cv2.circle(currentSlide,indexFinger,8,(0,0,200),cv2.FILLED)
             annotations[annotationnumber].append(indexFinger)
         else: 
             annotationstart=False
@@ -103,7 +103,7 @@ while True:
     for i in range(len(annotations)):
         for j in range(len(annotations[i])):
             if j!=0:
-                cv2.line(currentSlide,annotations[i][j-1],annotations[i][j],(0,0,200),12)
+                cv2.line(currentSlide,annotations[i][j-1],annotations[i][j],(200,0,0),6)
     
     #overlay of webcam on presentation
     imgSmall=cv2.resize(img,(widthsmall,heightsmall))
