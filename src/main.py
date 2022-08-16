@@ -38,7 +38,7 @@ while True:
     heigthCurrent,widthCurrent,_Current=currentSlide.shape
 
 
-    hands,img=detector.findHands(img) #flipType=false will show the correctls hands, i.e left as left
+    hands,img=detector.findHands(img,flipType=False) #flipType=false will show the correctls hands, i.e left as left
     #drawing a line on the webcam so as to detect gestures only above that line
     cv2.line(img,(0,gestureThreshold),(width,gestureThreshold),(0,255,0),10)
     
