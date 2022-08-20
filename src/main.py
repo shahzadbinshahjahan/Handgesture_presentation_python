@@ -2,10 +2,11 @@ import cv2
 import os
 import numpy as np
 from handtrackingmodule import HandDetector
+import sys
 
 #variables
-width,height=int(1366),int(768) #dimensions of webcam
-folderPath="../Resources/test"
+width,height=int(1366/1.01),int(650) #dimensions of webcam
+folderPath=sys.argv[1] #getting the folder path from command line
 slideNumber=0
 heightsmall,widthsmall=int(height/5),int(width/5) #dimensions of webcam on presentation
 gestureThreshold=300
@@ -24,7 +25,7 @@ cap.set(4,height)
 #get list of prensentation images
 #fix::10.png not working even if key=len
 #maybe it is storing as string, convert it to integer
-pathImages=sorted(os.listdir(folderPath)) #sorting according to numbers and length
+pathImages=sorted(os.listdir(folderPath),key=lambda x:(len(x),x)) #sorting according to numbers and length
 #print(pathImages)
 
 #hand detector
@@ -36,6 +37,7 @@ while True:
     #import images
     pathFullImage=os.path.join(folderPath,pathImages[slideNumber])
     currentSlide=cv2.imread(pathFullImage)
+    currentSlide=cv2.resize(currentSlide,(width,height),interpolation=cv2.INTER_LINEAR)
     heigthCurrent,widthCurrent,_Current=currentSlide.shape
 
 
@@ -58,7 +60,7 @@ while True:
         if cy<=gestureThreshold: #if hand is at the height of the face
             #Gesture-1 Go left
             if fingers == [1,0,0,0,0]: #thumb
-                print("left")
+                #print("left")
                 
                 if slideNumber>0:
                     buttonPress=True
@@ -69,7 +71,7 @@ while True:
             
             #Gesture -2 Go right
             if fingers == [0,0,0,0,1]: #little finger
-                print("right")
+                #print("right")
                 
                 if slideNumber < len(pathImages)-1:
                     buttonPress=True
