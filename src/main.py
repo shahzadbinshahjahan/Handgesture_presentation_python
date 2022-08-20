@@ -11,7 +11,7 @@ heightsmall,widthsmall=int(height/5),int(width/5) #dimensions of webcam on prese
 gestureThreshold=300
 buttonPress=False
 buttoncounter=0
-buttondelay=15 #fps
+buttondelay=10 #fps
 annotations=[[]] #stores at points to draw at
 annotationnumber=-1
 annotationstart=False
@@ -23,6 +23,7 @@ cap.set(4,height)
 
 #get list of prensentation images
 #fix::10.png not working even if key=len
+#maybe it is storing as string, convert it to integer
 pathImages=sorted(os.listdir(folderPath)) #sorting according to numbers and length
 #print(pathImages)
 
@@ -91,7 +92,14 @@ while True:
             annotations[annotationnumber].append(indexFinger)
         else: 
             annotationstart=False
-    
+        
+        #Gesture -5 Erase
+        if fingers == [0,1,1,1,0]:
+            if annotations:
+                annotations.pop(-1)
+                annotationnumber-=1
+                buttonPress=True
+
     #Button pressed iterations
     if buttonPress:
         buttoncounter+=1
