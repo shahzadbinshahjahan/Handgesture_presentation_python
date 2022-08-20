@@ -1,0 +1,4 @@
+Mark - 2 :
+- Sort number of images more than 10
+- Develop program to convert ppt to png
+- Add gesture to change color of the line while annotating
