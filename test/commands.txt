@@ -1,0 +1,2 @@
+unoconv filename.ppt filename.pdf
+convert filename.pdf filename.png
