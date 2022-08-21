@@ -26,7 +26,7 @@ cap.set(4,height)
 #fix::10.png not working even if key=len
 #maybe it is storing as string, convert it to integer
 pathImages=sorted(os.listdir(folderPath),key=lambda x:(len(x),x)) #sorting according to numbers and length
-#print(pathImages)
+print(pathImages)
 
 #hand detector
 detector=HandDetector(detectionCon=0.8,maxHands=1)

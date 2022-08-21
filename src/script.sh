@@ -3,7 +3,6 @@
 echo -n "Please enter ppt name"
 echo
 read pptname
-mkdir output/
 mkdir tempoutput/
 cp  $1 tempoutput/
 cd tempoutput/
@@ -16,17 +15,21 @@ convert ../$pptname.pdf i.png
 
 #converting images to numbers for listing in python
 
-num=1
-for file in *
-do cp $file ../../output/$num
-	num=$((num+1))
+#num=1
+#for file in *
+#do cp $file ../../output/$num
+#	num=$((num+1))
+#done
+
+for file in *.png;
+do mv $file "$(echo $file | cut -c 3- | rev | cut -c 5- | rev)"
 done
 
 #clearing all tempfiles
 cd ../..
-rm -r tempoutput/
+#rm -r tempoutput/
 echo "Thank you for your patience"
 echo "Loading presentation"
-python3 main.py "output/"
+python3 main.py "tempoutput/images/"
 
 
