@@ -19,14 +19,14 @@ pptname=${xbase%.*} #this stores the filename without extension
 #read pptname
 #ls
 
-if [ -d "$pptname/images" ];
-then 
-	echo "Already present"
+if [ -d "/home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname/images" ];
+then
+	echo "Loading Presentation into Handy PPT"
 else	
-    mkdir $pptname
+    mkdir /home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname
     #copying the presentation from the input path to temporary folder
-    cp  $1 $pptname
-    cd $pptname
+    cd /home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname/
+    cp  $1 .
     mkdir images/
     echo "Converting presentation ..."
     unoconv $pptname.pptx $pptname.pdf
@@ -52,7 +52,7 @@ else
     for file in *.png;
     do mv $file "$(echo $file | cut -c 3- | rev | cut -c 5- | rev)"
     done
-    cd ../..
+    cd /home/shah/Documents/projects/opencv/Handgesture_presentation_python/src/
 fi
 
 echo "Thank you for your patience"
@@ -61,4 +61,4 @@ echo "Loading presentation"
 
 #ls
 #echo $pptname
-python3 main.py $pptname/images/
+python3 main.py /home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname/images
