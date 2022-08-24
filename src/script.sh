@@ -10,7 +10,7 @@ filename=$(basename ${fullpath})
 #removing extension
 xpath=${fullpath%/*}
 xbase=${fullpath##*/}
-# xfext=${xbase##*.} this stores the file extension
+xfext=${xbase##*.} #this stores the file extension
 pptname=${xbase%.*} #this stores the filename without extension
 #echo $pptname
 
@@ -22,6 +22,20 @@ pptname=${xbase%.*} #this stores the filename without extension
 if [ -d "/home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname/images" ];
 then
 	echo "Loading Presentation into Handy PPT"
+elif [ "$xfext" == "pdf" ]
+then
+	mkdir /home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname
+	cd /home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname/
+	cp  $1 .
+	mkdir images/
+	cd images/
+   	convert ../$pptname.pdf i.png
+	for file in *.png;
+    		do mv $file "$(echo $file | cut -c 3- | rev | cut -c 5- | rev)"
+        done
+   	cd /home/shah/Documents/projects/opencv/Handgesture_presentation_python/src/
+
+
 else	
     mkdir /home/shah/Documents/projects/opencv/Handgesture_presentation_python/Resources/$pptname
     #copying the presentation from the input path to temporary folder
