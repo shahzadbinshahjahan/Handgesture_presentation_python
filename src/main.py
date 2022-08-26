@@ -34,6 +34,7 @@ detector=HandDetector(detectionCon=0.8,maxHands=1)
 while True:
     success,img=cap.read()
     img=cv2.flip(img,1)
+    copyimage=img.copy() #copyimage is to store the original image without landmarks
     #import images
     pathFullImage=os.path.join(folderPath,pathImages[slideNumber])
     currentSlide=cv2.imread(pathFullImage)
@@ -44,6 +45,8 @@ while True:
     hands,img=detector.findHands(img) #flipType=false will show the correctls hands, i.e left as left
     #drawing a line on the webcam so as to detect gestures only above that line
     cv2.line(img,(0,gestureThreshold),(width,gestureThreshold),(0,255,0),10)
+    #displaying only the line on copy image so that user can see where to gesture
+    cv2.line(copyimage,(0,gestureThreshold),(width,gestureThreshold),(0,255,0),10)
     
     if hands and buttonPress is False:
         hand=hands[0] #get the first hand
@@ -116,10 +119,10 @@ while True:
                 cv2.line(currentSlide,annotations[i][j-1],annotations[i][j],(200,0,0),6)
     
     #overlay of webcam on presentation
-    imgSmall=cv2.resize(img,(widthsmall,heightsmall))
+    imgSmall=cv2.resize(copyimage,(widthsmall,heightsmall))
     currentSlide[0:heightsmall,widthCurrent-widthsmall:widthCurrent]=imgSmall
     
-    #cv2.imshow("Web Cam",img)
+    #cv2.imshow("Web Cam",copyimage)
     cv2.imshow("Presentation",currentSlide)
     key=cv2.waitKey(1)
     if key==ord('q'):
