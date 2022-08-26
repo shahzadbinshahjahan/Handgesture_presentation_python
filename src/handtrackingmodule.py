@@ -30,8 +30,16 @@ class HandDetector:
                                         min_tracking_confidence=self.minTrackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
+        """
+        4: Tip of thumb finger
+        8: Tip of index finger
+        12: Tip of Middle finger
+        16: Tip of Ring finger
+        20: Tip of little finger
+        """
         self.fingers = []
-        self.lmList = []
+        """Landmark list"""
+        self.lmList = [] 
 
     def findHands(self, img, draw=True, flipType=True):
         """

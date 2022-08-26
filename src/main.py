@@ -119,7 +119,7 @@ while True:
     imgSmall=cv2.resize(img,(widthsmall,heightsmall))
     currentSlide[0:heightsmall,widthCurrent-widthsmall:widthCurrent]=imgSmall
     
-    cv2.imshow("Web Cam",img)
+    #cv2.imshow("Web Cam",img)
     cv2.imshow("Presentation",currentSlide)
     key=cv2.waitKey(1)
     if key==ord('q'):
